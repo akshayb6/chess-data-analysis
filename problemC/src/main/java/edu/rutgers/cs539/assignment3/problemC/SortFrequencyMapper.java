@@ -11,10 +11,8 @@ public class SortFrequencyMapper extends Mapper<LongWritable, Text, SortDataWrit
 
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 		String[] vals = value.toString().split("\\s+");
-		int moveCount = Integer.parseInt(vals[0]);
-		int frequency = Integer.parseInt(vals[1]);
 		
-		context.write(new SortDataWritable(frequency), new IntWritable(moveCount));
+		context.write(new SortDataWritable(vals[1]), new IntWritable(Integer.parseInt(vals[0])));
 	}
 
 }

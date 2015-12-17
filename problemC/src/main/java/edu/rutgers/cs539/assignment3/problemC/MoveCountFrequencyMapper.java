@@ -17,9 +17,13 @@ import org.apache.hadoop.mapreduce.Mapper;
 public class MoveCountFrequencyMapper extends Mapper<GameDataWritable,NullWritable, Text, IntWritable> {
 
 	private static final IntWritable one = new IntWritable(1);
+	public static enum GAMES_COUNTER {
+		NUM_GAMES
+	}
 	
 	public void map(GameDataWritable key, NullWritable value, Context context) throws IOException, InterruptedException {
-
+		
+		context.getCounter(GAMES_COUNTER.NUM_GAMES).increment(1);
 		context.write(new Text(Integer.toString(key.getNumberOfMoves())), one);
 	}
 }

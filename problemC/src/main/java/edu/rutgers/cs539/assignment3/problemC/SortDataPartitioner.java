@@ -12,14 +12,15 @@ import org.apache.hadoop.mapreduce.Partitioner;
  */
 public class SortDataPartitioner extends Partitioner<SortDataWritable, IntWritable>  {
 
-	public static final int PREDICTED_MAX_FREQ = 700;
-	
 	@Override
 	public int getPartition(SortDataWritable key, IntWritable value, int numPartitions) {
-		int frequency = key.getFrequency();
-		int intervalSize = PREDICTED_MAX_FREQ / numPartitions;
-		
-		System.out.println("frequency = " + frequency + " numPartitions = " + numPartitions + " interval = " + intervalSize + " bucket = " + frequency / intervalSize);
-		return frequency / intervalSize;
+		Double percent = Double.parseDouble(key.getPercent());
+		if (numPartitions >= 100) {
+			return (int)Math.floor(percent);
+		} else {
+
+			int intervalSize = 100 / numPartitions;
+			return (numPartitions - ((int)Math.floor(percent) / intervalSize) - 1);
+		}
 	}
 }

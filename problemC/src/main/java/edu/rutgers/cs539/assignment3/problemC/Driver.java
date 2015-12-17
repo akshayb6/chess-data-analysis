@@ -25,7 +25,10 @@ public class Driver
     
     public static void main( String[] args )
     {
+    	// Run the job to calculate frequencies
     	runMoveCountFrequencyCalcJob(args[0], args[1] + nf.format(1));
+    	
+    	// Run the job to sort the output of previous job
     	runSortFrequencyJob(args[1] + nf.format(1), args[1] + nf.format(2));
     }
     
@@ -48,7 +51,7 @@ public class Driver
 			FileOutputFormat.setOutputPath(job, new Path(outputPath));
 			
 			job.setOutputKeyClass(Text.class);
-			job.setOutputValueClass(IntWritable.class);
+			job.setOutputValueClass(Text.class);
 			
 			job.waitForCompletion(true);
 		} catch (IOException e) {
@@ -79,39 +82,8 @@ public class Driver
 			FileOutputFormat.setOutputPath(job, new Path(outputPath));
 			
 			job.setOutputKeyClass(IntWritable.class);
-			job.setOutputValueClass(IntWritable.class);
+			job.setOutputValueClass(SortDataWritable.class);
 			
-			job.waitForCompletion(true);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-    
-    public static void runChessDataParser(String inputPath, String outputPath) {
-		Configuration conf = new Configuration();
-		Job job;
-		try {
-			conf.set(OUTPUT_DIR, outputPath);
-			job = Job.getInstance(conf, "pgn parser C");
-
-			job.setJarByClass(Driver.class);
-			job.setInputFormatClass(PGNInputFormat.class);
-			job.setMapperClass(ChessGameMapper.class);
-			job.setMapOutputKeyClass(Text.class);
-			job.setMapOutputValueClass(IntWritable.class);
-			job.setCombinerClass(ChessGameCombiner.class);
-			job.setReducerClass(ChessGameReducer.class);
-
-			FileInputFormat.addInputPath(job, new Path(inputPath));
-			FileOutputFormat.setOutputPath(job, new Path(outputPath));
-			//MultipleOutputs.addNamedOutput(job, OUTPUT_DIR, TextOutputFormat.class, Text.class, IntWritable.class);
-			
-			job.setOutputKeyClass(Text.class);
-			job.setOutputValueClass(IntWritable.class);
 			job.waitForCompletion(true);
 		} catch (IOException e) {
 			e.printStackTrace();

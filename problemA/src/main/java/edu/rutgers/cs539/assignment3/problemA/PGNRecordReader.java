@@ -58,11 +58,9 @@ public class PGNRecordReader extends RecordReader<GameDataWritable, NullWritable
 			key.setBlackPlayer(game.getBlack());
 			key.setWhitePlayer(game.getWhite());
 			return true;
-		} catch (PGNSyntaxError e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			return nextKeyValue();
 		}
-		
-		return false;
 	}
 
 	@Override

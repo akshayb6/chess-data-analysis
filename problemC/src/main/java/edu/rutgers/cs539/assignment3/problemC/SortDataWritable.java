@@ -15,73 +15,53 @@ import org.apache.hadoop.io.WritableComparable;
  */
 public class SortDataWritable implements WritableComparable<SortDataWritable> {
 
-	private int frequency;
+	private String percent;
 	
 	public SortDataWritable() {
 		
 	}
 	
-	public SortDataWritable(int frequency) {
+	public SortDataWritable(String percent) {
 		super();
-		this.frequency = frequency;
+		this.percent = percent;
 	}
 
 	@Override
 	public void write(DataOutput out) throws IOException {
 
-		out.writeInt(frequency);
+		out.writeUTF(percent);
 	}
 
 	@Override
 	public void readFields(DataInput in) throws IOException {
-		frequency = in.readInt();
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + frequency;
-		return result;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		SortDataWritable other = (SortDataWritable) obj;
-		if (frequency != other.frequency)
-			return false;
-		return true;
+		percent = in.readUTF();
 	}
 
 	@Override
 	public int compareTo(SortDataWritable data) {
-		return data.frequency - this.frequency;
+		double val1 = Double.parseDouble(percent);
+		double val2 = Double.parseDouble(data.percent);
+		if (val1==val2) {
+			return 0;
+		} else if (val2>val1) {
+			return 1;
+		} else{
+			return -1;
+		}
 	}
 
 	/**
-	 * @return the frequency
+	 * @return the percent
 	 */
-	public int getFrequency() {
-		return frequency;
+	public String getPercent() {
+		return percent;
 	}
 
 	/**
-	 * @param frequency the frequency to set
+	 * @param percent the percent to set
 	 */
-	public void setFrequency(int frequency) {
-		this.frequency = frequency;
+	public void setPercent(String percent) {
+		this.percent = percent;
 	}
 
 	/* (non-Javadoc)
@@ -89,6 +69,6 @@ public class SortDataWritable implements WritableComparable<SortDataWritable> {
 	 */
 	@Override
 	public String toString() {
-		return Integer.toString(frequency);
+		return percent;
 	}
 }
